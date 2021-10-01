@@ -6,6 +6,7 @@ import sqlite3
 db = 'questions.sqlite'
 
 def create_table():
+    # TODO create table if not exists statement for results table
     #context manager - don't need to commit as before
     with sqlite3.connect(db) as conn:
         conn.execute("""CREATE TABLE IF NOT EXISTS quiz_questions (
@@ -19,6 +20,17 @@ def create_table():
             difficulty INTEGER NOT NULL,
             points INTEGER NOT NULL)"""
         )
+        conn.execute('''CREATE TABLE IF NOT EXISTS quiz_results (
+            question_id	INTEGER,
+            time_started INTEGER,
+            time_completed INTEGER,
+            question_asked INTEGER,
+            answer_picked INTEGER,
+            is_correct INTEGER,
+            points_available INTEGER,
+            points_earned INTEGER,
+            score_as_percent INTEGER)'''
+        )
     conn.close()
 
 
@@ -30,7 +42,8 @@ def create_table():
 #         conn.execute('INSERT INTO products values (1001, "jacket")')
 #     conn.close()
 
-def display_all_data():
+def display_question():
+    #TODO needs to be sent topic as a parameter to know which questions to query
     conn = sqlite3.connect(db)
     results = conn.execute('SELECT * FROM quiz_questions WHERE rowid = 1')
     print(f'Question 1: ')
@@ -40,7 +53,7 @@ def display_all_data():
     conn.close()
 
 create_table()
-display_all_data()
+display_question()
 # def display_one_product(product_name):
 #     conn = sqlite3.connect(db)
 #     results = conn.execute('SELECT * FROM products WHERE name like ?', (product_name,))
