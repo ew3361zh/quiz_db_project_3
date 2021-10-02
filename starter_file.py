@@ -47,17 +47,20 @@ def get_topics():
     topics = [i[0] for i in topics]
     return topics
 
-def display_questions():
+def get_questions(topic):
     #TODO needs to be sent topic as a parameter to know which questions to query
     conn = sqlite3.connect(db)
     # TODO get results for all matching questions from topic (put into dictionary?)
-    results = conn.execute('SELECT * FROM quiz_questions WHERE rowid = 1')
-    print(f'Question 1: ')
+    results = conn.execute('SELECT * FROM quiz_questions WHERE topic = ?', (topic,))
+    questions_answers = []
     for row in results:
-        print(row) # each row is a tuple
+        questions_answers.append((row[1], [row[2], row[3], row[4], row[5]]))
+    questions_dict = dict(questions_answers)
+    # print(questions_dict)
     conn.close()
     # TODO return questions and possible answers together but randomized or randomize 
     # when print them out
+    return questions_dict
 
 
 
@@ -91,7 +94,9 @@ def create_table():
         )
     conn.close()
 
-
+def ask_questions(questions_dict):
+    for question, answer in questions_dict.items():
+        print()
 
 # def insert_test_results():
 #     # TODO insert test result for question to results db
@@ -101,14 +106,14 @@ def create_table():
 #     conn.close()
 
 def validate_topic_choice(topics):
-    topic_requested = input('Please select the number of the topic would you like to be quizzed? ')
+    topic_requested = input('Please select the number of the topic would you like to be quizzed: ')
     print('\n')
     while topic_requested.isnumeric() is False or int(topic_requested) > len(topics) or int(topic_requested) == 0: #validation based on keys and using .lower() to make sure case isn't a cause of user input being rejected
         print('Please only choose from one of the below listed categories\n')
         for count, topic in enumerate(topics):
             print(count+1, topic)
         print('\n')
-        topic_requested = input('Try again, in which of the above listed topics would you like to be quizzed? ')
+        topic_requested = input('Try again and please select from the topics by number: ')
     topic_requested = int(topic_requested)-1
     return topic_requested #return chosen q/a sub dictionary to main for use in the ask_questions function
 
@@ -123,8 +128,11 @@ def main():
     for count, topic in enumerate(topics):
         print(count+1, topic)
     print('\n')
-    topic_requested = validate_topic_choice(topics) 
-    print(f'You selected {topics[topic_requested]}')
+    topic_requested_num = validate_topic_choice(topics)
+    topic_requested = topics[topic_requested_num]
+    print(f'You selected {topic_requested.upper()}')
+    questions_dict = get_questions(topic_requested)
+    ask_questions(questions_dict)
     # total_score = ask_questions(topic_questions, total_score) #processing function called
     # score_output(total_score, len(topic_questions)) #output results to user, send down both updated total score from ask_questions 
     #                                                 #function return and the number of questions in their particular chosen topic area
@@ -132,7 +140,7 @@ def main():
     print('Thank you for playing!\n')
 
 
-# display_questions()
+
 
 if __name__ == '__main__':
     main()
