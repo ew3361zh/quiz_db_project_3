@@ -109,6 +109,7 @@ def validate_topic_choice(topics):
             print(count+1, topic)
         print('\n')
         topic_requested = input('Try again, in which of the above listed topics would you like to be quizzed? ')
+    topic_requested = int(topic_requested)-1
     return topic_requested #return chosen q/a sub dictionary to main for use in the ask_questions function
 
 def main():
@@ -123,7 +124,7 @@ def main():
         print(count+1, topic)
     print('\n')
     topic_requested = validate_topic_choice(topics) 
-    print(topic_requested)
+    print(f'You selected {topics[topic_requested]}')
     # total_score = ask_questions(topic_questions, total_score) #processing function called
     # score_output(total_score, len(topic_questions)) #output results to user, send down both updated total score from ask_questions 
     #                                                 #function return and the number of questions in their particular chosen topic area
