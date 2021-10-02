@@ -5,6 +5,62 @@ import sqlite3
 
 db = 'questions.sqlite'
 
+class Quizquestion:
+
+    def __init__(self, 
+                id, 
+                question_text, 
+                correct_answer, 
+                wrong_answer_1,
+                wrong_answer_2,
+                wrong_answer_3,
+                topic,
+                difficulty,
+                points):
+
+        self.id = id
+        self.question_text = question_text
+        self.correct_answer = correct_answer
+        self.wrong_answer_1 = wrong_answer_1
+        self.wrong_answer_2 = wrong_answer_2
+        self.wrong_answer_3 = wrong_answer_3
+        self.topic = topic
+        self.difficulty = difficulty
+        self.points = points 
+
+    
+    def __str__(self):
+        return f'{self.id}, {self.question_text}: {self.correct_answer}, {self.topic}, {self.difficulty}, {self.points}'
+    
+def get_topics():
+    conn = sqlite3.connect(db)
+    results = conn.execute('SELECT topic FROM quiz_questions')
+    topics = [] 
+    for topic in results:
+        if topic in topics:
+            pass
+        else:
+            topics.append(topic)
+    conn.close()
+    # how to get normal string output from tuple sql query (i.e. turn ('x',) into x):
+    # https://stackoverflow.com/questions/47716237/python-list-how-to-remove-parenthesis-quotes-and-commas-in-my-list
+    topics = [i[0] for i in topics]
+    return topics
+
+def display_questions():
+    #TODO needs to be sent topic as a parameter to know which questions to query
+    conn = sqlite3.connect(db)
+    # TODO get results for all matching questions from topic (put into dictionary?)
+    results = conn.execute('SELECT * FROM quiz_questions WHERE rowid = 1')
+    print(f'Question 1: ')
+    for row in results:
+        print(row) # each row is a tuple
+    conn.close()
+    # TODO return questions and possible answers together but randomized or randomize 
+    # when print them out
+
+
+
 def create_table():
     # TODO create table if not exists statement for results table
     #context manager - don't need to commit as before
@@ -20,6 +76,7 @@ def create_table():
             difficulty INTEGER NOT NULL,
             points INTEGER NOT NULL)"""
         )
+        # conn.execute("""DROP TABLE quiz_results""")
         conn.execute('''CREATE TABLE IF NOT EXISTS quiz_results (
             question_id	INTEGER,
             time_started INTEGER,
@@ -29,7 +86,8 @@ def create_table():
             is_correct INTEGER,
             points_available INTEGER,
             points_earned INTEGER,
-            score_as_percent INTEGER)'''
+            score_as_percent INTEGER,
+            FOREIGN KEY(question_id) REFERENCES quiz_questions(id))'''
         )
     conn.close()
 
@@ -42,42 +100,38 @@ def create_table():
 #         conn.execute('INSERT INTO products values (1001, "jacket")')
 #     conn.close()
 
-def display_question():
-    #TODO needs to be sent topic as a parameter to know which questions to query
-    conn = sqlite3.connect(db)
-    results = conn.execute('SELECT * FROM quiz_questions WHERE rowid = 1')
-    print(f'Question 1: ')
-    for row in results:
-        print(row) # each row is a tuple
+def validate_topic_choice(topics):
+    topic_requested = input('Please select the number of the topic would you like to be quizzed? ')
+    print('\n')
+    while topic_requested.isnumeric() is False or int(topic_requested) > len(topics) or int(topic_requested) == 0: #validation based on keys and using .lower() to make sure case isn't a cause of user input being rejected
+        print('Please only choose from one of the below listed categories\n')
+        for count, topic in enumerate(topics):
+            print(count+1, topic)
+        print('\n')
+        topic_requested = input('Try again, in which of the above listed topics would you like to be quizzed? ')
+    return topic_requested #return chosen q/a sub dictionary to main for use in the ask_questions function
 
-    conn.close()
+def main():
+    total_score = 0
+    create_table()
+    print('\n')
+    print('Welcome to our quiz program!\n')
+    print('You can choose to answer questions from the following categories:\n')
+    # TODO method to query db to get list of topics and return list without duplicates
+    topics = get_topics()
+    for count, topic in enumerate(topics):
+        print(count+1, topic)
+    print('\n')
+    topic_requested = validate_topic_choice(topics) 
+    print(topic_requested)
+    # total_score = ask_questions(topic_questions, total_score) #processing function called
+    # score_output(total_score, len(topic_questions)) #output results to user, send down both updated total score from ask_questions 
+    #                                                 #function return and the number of questions in their particular chosen topic area
+    print('\n')
+    print('Thank you for playing!\n')
 
-create_table()
-display_question()
-# def display_one_product(product_name):
-#     conn = sqlite3.connect(db)
-#     results = conn.execute('SELECT * FROM products WHERE name like ?', (product_name,))
-#     first_row = results.fetchone()
-#     if first_row:
-#         print('Your product is:', first_row) # upgrade to row factory later
-#     else:
-#         print('not found')
-#     conn.close()
 
-# def create_new_product():
-#     new_id = int(input('enter new id: '))
-#     new_name = input('enter new name: ')
-    
-#     with sqlite3.connect(db) as conn:
-#     # don't use format strings for commit SQL statements
-#     # conn.execute(f'INSERT INTO products VALUES({new_id}, "{new_name}")') # wrong - will make program crash if unacceptable character entered as variable
-#         conn.execute(f'INSERT INTO products VALUES(?, ?)', (new_id, new_name)) # right - using parameterized queries
-#     conn.close()
+# display_questions()
 
-# def update_product():
-#     updated_product = 'wool hat'
-#     update_id = 1000
-
-#     with sqlite3.connect(db) as conn:
-#         conn.execute('UPDATE products SET name = ? WHERE id = ?', (updated_product, update_id))
-#     conn.close()
+if __name__ == '__main__':
+    main()
