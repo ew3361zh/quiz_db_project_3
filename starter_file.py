@@ -2,6 +2,8 @@
 Adaptatation from week5 chainsaws database program
 """
 import sqlite3
+import random
+from datetime import datetime, date, time
 
 db = 'questions.sqlite'
 
@@ -95,8 +97,23 @@ def create_table():
     conn.close()
 
 def ask_questions(questions_dict):
+    question_count = 0
     for question, answer in questions_dict.items():
-        print()
+        print(f'Question #{question_count+1}:')
+        print(question)
+        correct_answer = answer[0]
+        random.shuffle(answer)
+        for q_num, a in enumerate(answer):
+            print(f'{q_num+1}:{a}')
+        user_answer = input('What is your answer? ')
+        while user_answer.isnumeric() is False or int(user_answer) not in range(1,5):
+            user_answer = input('Please try again and select the number answer you believe is correct')
+        user_answer = int(user_answer)-1
+        print(f'User answer is {answer[user_answer]}')
+        if answer[user_answer] == correct_answer:
+            print('Correctamundo!')
+        else:
+            print(f'I\'m deeply sorry but the correct answer is {answer[0]}')
 
 # def insert_test_results():
 #     # TODO insert test result for question to results db
