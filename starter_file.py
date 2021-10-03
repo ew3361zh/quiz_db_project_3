@@ -55,14 +55,17 @@ def get_questions(topic):
     # TODO get results for all matching questions from topic (put into dictionary?)
     results = conn.execute('SELECT * FROM quiz_questions WHERE topic = ?', (topic,))
     questions_answers = []
+    points_and_scores = []
     for row in results:
         questions_answers.append((row[1], [row[2], row[3], row[4], row[5]]))
+        points_and_scores.append(row[7]) 
+        points_and_scores.append(row[8])
     questions_dict = dict(questions_answers)
     # print(questions_dict)
     conn.close()
     # TODO return questions and possible answers together but randomized or randomize 
     # when print them out
-    return questions_dict
+    return questions_dict, points_and_scores
 
 
 
@@ -96,10 +99,12 @@ def create_table():
         )
     conn.close()
 
-def ask_questions(questions_dict):
-    question_count = 0
+def ask_questions(questions_dict, points_and_scores):
+    time_started = datetime.now()
+    question_counter = 1
     for question, answer in questions_dict.items():
-        print(f'Question #{question_count+1}:')
+        time_started = datetime.now()
+        print(f'Question #{question_counter}:')
         print(question)
         correct_answer = answer[0]
         random.shuffle(answer)
@@ -108,12 +113,33 @@ def ask_questions(questions_dict):
         user_answer = input('What is your answer? ')
         while user_answer.isnumeric() is False or int(user_answer) not in range(1,5):
             user_answer = input('Please try again and select the number answer you believe is correct')
+        time_completed = datetime.now()
         user_answer = int(user_answer)-1
         print(f'User answer is {answer[user_answer]}')
+        is_correct = 1
         if answer[user_answer] == correct_answer:
             print('Correctamundo!')
         else:
             print(f'I\'m deeply sorry but the correct answer is {answer[0]}')
+            is_correct = 0
+        if is_correct == 1:
+            points_earned = points_and_scores[0]
+        else:
+            points_earned = 0
+        with sqlite3.connect(db) as conn:
+            conn.execute(f'INSERT INTO quiz_results VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', 
+                        (question_counter, 
+                        time_started, 
+                        time_completed,
+                        question, 
+                        answer[user_answer],
+                        is_correct,
+                        points_and_scores[0],
+                        points_earned,
+                        points_and_scores[1]))
+        conn.close()
+        question_counter += question_counter
+
 
 # def insert_test_results():
 #     # TODO insert test result for question to results db
@@ -148,8 +174,8 @@ def main():
     topic_requested_num = validate_topic_choice(topics)
     topic_requested = topics[topic_requested_num]
     print(f'You selected {topic_requested.upper()}')
-    questions_dict = get_questions(topic_requested)
-    ask_questions(questions_dict)
+    questions_dict, points_and_scores = get_questions(topic_requested)
+    ask_questions(questions_dict, points_and_scores)
     # total_score = ask_questions(topic_questions, total_score) #processing function called
     # score_output(total_score, len(topic_questions)) #output results to user, send down both updated total score from ask_questions 
     #                                                 #function return and the number of questions in their particular chosen topic area
