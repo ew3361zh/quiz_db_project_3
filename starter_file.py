@@ -104,7 +104,6 @@ def create_table():
 def ask_questions(topic_requested, questions_dict, difficulty, points):
     time_started = datetime.now()
     user_id = str(uuid.uuid4())
-    print(user_id)
     question_counter = 0
     for question, answer in questions_dict.items():
         time_started = datetime.now()
@@ -132,7 +131,7 @@ def ask_questions(topic_requested, questions_dict, difficulty, points):
         if answer[user_answer] == correct_answer:
             print('Correctamundo!')
         else:
-            print(f'I\'m deeply sorry but the correct answer is {answer[0]}')
+            print(f'I\'m deeply sorry but the correct answer is {correct_answer}')
             is_correct = 0
         if is_correct == 1:
             points_earned = points[question_counter]
@@ -141,7 +140,7 @@ def ask_questions(topic_requested, questions_dict, difficulty, points):
         with sqlite3.connect(db) as conn:
             conn.execute(f'INSERT INTO quiz_results VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', 
                         (user_id,
-                        question_counter, 
+                        question_counter+1, 
                         time_started, 
                         time_completed,
                         question, 
@@ -150,7 +149,7 @@ def ask_questions(topic_requested, questions_dict, difficulty, points):
                         points[question_counter],
                         points_earned))
         conn.close()
-        question_counter += question_counter
+        question_counter = question_counter + 1
     return user_id
 
 def show_results(user_id):
@@ -188,9 +187,6 @@ def main():
     topic_requested = topics[topic_requested_num].upper()
     print(f'You selected {topic_requested}')
     questions_dict, difficulty, points = get_questions(topic_requested)
-    print(questions_dict)
-    print(difficulty)
-    print(points)
     user_id = ask_questions(topic_requested, questions_dict, difficulty, points)
     show_results(user_id)
     print('\n')
