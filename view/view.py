@@ -13,37 +13,39 @@ class View:
     def __init__(self, view_model):
         self.view_model = view_model
 
-    # TODO asking user for what? topic? or to insert data in results db?
+    # main calls this function first which basically kicks off everything and nothing goes back to main right now
+    # TODO send topics to choose topics vs return topics to main which wasn't working?
     def get_topics(self):
 
         header('Welcome to our quiz program!\nYou can choose to answer questions from the following categories:')
 
         try:           
             topics = self.view_model.get_topics()
-            return topics
+            self.choose_topic(topics)
         except QuizError as e:
             print(str(e))
 
     def choose_topic(self, topics):
+
         for count, topic in enumerate(topics):
             print(count+1, topic)
         topic_requested_num = validate_topic_chosen(topics)
         topic_requested = topics[topic_requested_num].upper()
         print(f'You selected {topic_requested.upper()}')
-        return topic_requested
-    
+        self.get_questions(topic_requested)
 
-    # TODO maybe get_new_vehicle is get topic from user 
-    # and then this gets questions from db?
     
     def get_questions(self, topic):
+        
         try:
             questions, difficulty, points = self.view_model.get_questions(topic)
-            return questions, difficulty, points
+            self.ask_questions(questions, difficulty, points)
         except QuizError as e:
             print(str(e))
 
+
     def ask_questions(self, questions, difficulty, points):
+        
         time_started = datetime.now()
         user_id = str(uuid.uuid4())
         question_counter = 0
@@ -90,9 +92,11 @@ class View:
                 self.view_model.add_result(result)
             except QuizError as e:
                 print(str(e))
-        return user_id
+        self.show_results(user_id)
+
 
     def show_results(self, user_id):
+        
         try:
             results = self.view_model.show_results(user_id)
             for result in results: # TODO add to view_util to print out results more cleanly

@@ -46,17 +46,19 @@ class QuizquestionDB():
                 points_earned INTEGER,
                 FOREIGN KEY(question_id) REFERENCES quiz_questions(id))'''
             )
-        conn.close()
+        # commenting out close connection here because otherwise getting "cannot operate on a closed database" error
+        # conn.close()
 
     def get_topics(self):
-        conn = sqlite3.connect(db)
-        results = conn.execute('SELECT topic FROM quiz_questions')
-        topics = [] 
-        for topic in results:
-            if topic in topics:
-                pass
-            else:
-                topics.append(topic)
+        # conn = sqlite3.connect(db)
+        with sqlite3.connect(db) as conn:
+            results = conn.execute('SELECT topic FROM quiz_questions')
+            topics = [] 
+            for topic in results:
+                if topic in topics:
+                    pass
+                else:
+                    topics.append(topic)
         conn.close()
         # how to get normal string output from tuple sql query (i.e. turn ('x',) into x):
         # https://stackoverflow.com/questions/47716237/python-list-how-to-remove-parenthesis-quotes-and-commas-in-my-list
@@ -64,21 +66,23 @@ class QuizquestionDB():
         return topics
     
     def get_questions(self, topic):
-        conn = sqlite3.connect(db)
-        results = conn.execute('SELECT * FROM quiz_questions WHERE topic = ?', (topic,))
-        questions_answers = []
-        difficulty = []
-        points = []
-        for row in results:
-            questions_answers.append((row[1], [row[2], row[3], row[4], row[5]]))
-            difficulty.append(row[7]) 
-            points.append(row[8])
-        questions_dict = dict(questions_answers)
+        # conn = sqlite3.connect(db)
+        with sqlite3.connect(db) as conn:
+            results = conn.execute('SELECT * FROM quiz_questions WHERE topic = ?', (topic,))
+            questions_answers = []
+            difficulty = []
+            points = []
+            for row in results:
+                questions_answers.append((row[1], [row[2], row[3], row[4], row[5]]))
+                difficulty.append(row[7]) 
+                points.append(row[8])
+            questions_dict = dict(questions_answers)
         conn.close()
         return questions_dict, difficulty, points
     
     def add_result(self, result):
         # TODO get all the below data into a result variable as list(?)
+        # possibly try Clara's version where she records rows_modified as variable for execute statement
         with sqlite3.connect(db) as conn:
             conn.execute(f'INSERT INTO quiz_results VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', 
                         (result[0],
@@ -90,11 +94,12 @@ class QuizquestionDB():
                         result[6],
                         result[7],
                         result[8]))
-        conn.close()
+        conn.commit()
     
     def show_results(self, user_id):
-        conn = sqlite3.connect(db)
-        results = conn.execute("""SELECT  
+        # conn = sqlite3.connect(db)
+        with sqlite3.connect(db) as conn:
+            results = conn.execute("""SELECT  
                                 COUNT(question_id) AS questions_answered,
                                 (SUM(time_completed)-SUM(time_started)) AS time_taken,
                                 SUM(is_correct) AS number_correct,
