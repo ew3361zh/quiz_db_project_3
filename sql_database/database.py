@@ -5,8 +5,6 @@
 # abc database would be a model of what any database should have in terms of methods - may leave this for last
 # this would allow another type of db to be put in place of the sqlite db (this file)
 
-
-
 import sqlite3 
 # from .config import db  # .config means import from this directory 
 from .config import db_path
