@@ -81,15 +81,15 @@ class QuizquestionDB():
         # TODO get all the below data into a result variable as list(?)
         with sqlite3.connect(db) as conn:
             conn.execute(f'INSERT INTO quiz_results VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', 
-                        (user_id,
-                        question_counter+1, 
-                        time_started, 
-                        time_completed,
-                        question, 
-                        answer[user_answer],
-                        is_correct,
-                        points[question_counter],
-                        points_earned))
+                        (result[0],
+                        result[1], 
+                        result[2], 
+                        result[3],
+                        result[4], 
+                        result[5],
+                        result[6],
+                        result[7],
+                        result[8]))
         conn.close()
     
     def show_results(self, user_id):

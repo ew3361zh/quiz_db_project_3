@@ -18,11 +18,11 @@ def main():
 
     topics = quiz_question_view.get_topics()  # do I need to have a place for the topics return to land here?
     
-    quiz_question_view.show_topics(topics)  # so I also am calling the show_topics with topics as argument...
+    topic_requested = quiz_question_view.choose_topic(topics)  # so I also am calling the show_topics with topics as argument...
     
-   # quiz_question_view.update_existing_vehicles()
+    questions, difficulty, points = quiz_question_view.get_questions(topic_requested)
 
-   # quiz_question_view.display_all_data()
+    results = quiz_question_view.ask_questions(questions, difficulty, points)
 
 
 if __name__ == '__main__':
