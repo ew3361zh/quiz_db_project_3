@@ -16,7 +16,9 @@ def main():
 
     quiz_question_view = View(quiz_question_view_model)
 
-   # quiz_question_view.get_new_vehicles()
+    topics = quiz_question_view.get_topics()  # do I need to have a place for the topics return to land here?
+    
+    quiz_question_view.show_topics(topics)  # so I also am calling the show_topics with topics as argument...
     
    # quiz_question_view.update_existing_vehicles()
 

@@ -7,73 +7,18 @@ import random
 from datetime import datetime, date, time
 import uuid
 
-db = 'questions.sqlite'
+# db = 'questions.sqlite'
     
-def get_topics():
-    conn = sqlite3.connect(db)
-    results = conn.execute('SELECT topic FROM quiz_questions')
-    topics = [] 
-    for topic in results:
-        if topic in topics:
-            pass
-        else:
-            topics.append(topic)
-    conn.close()
-    # how to get normal string output from tuple sql query (i.e. turn ('x',) into x):
-    # https://stackoverflow.com/questions/47716237/python-list-how-to-remove-parenthesis-quotes-and-commas-in-my-list
-    topics = [i[0] for i in topics]
-    return topics
+# def get_topics():
+    
 
-def get_questions(topic):
-    #TODO needs to be sent topic as a parameter to know which questions to query
-    conn = sqlite3.connect(db)
-    # TODO get results for all matching questions from topic (put into dictionary?)
-    results = conn.execute('SELECT * FROM quiz_questions WHERE topic = ?', (topic.lower(),))
-    questions_answers = []
-    difficulty = []
-    points = []
-    for row in results:
-        questions_answers.append((row[1], [row[2], row[3], row[4], row[5]]))
-        difficulty.append(row[7]) 
-        points.append(row[8])
-    questions_dict = dict(questions_answers)
+# def get_questions(topic):
+    
+    
     # print(questions_dict)
-    conn.close()
+    
     # TODO return questions and possible answers together but randomized or randomize 
     # when print them out
-    return questions_dict, difficulty, points
-
-
-
-def create_table():
-    # TODO create table if not exists statement for results table
-    #context manager - don't need to commit as before
-    with sqlite3.connect(db) as conn:
-        conn.execute("""CREATE TABLE IF NOT EXISTS quiz_questions (
-            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
-            question_text TEXT NOT NULL, 
-            correct_answer TEXT NOT NULL, 
-            wrong_answer_1 TEXT NOT NULL,
-            wrong_answer_2	TEXT NOT NULL,
-            wrong_answer_3	TEXT NOT NULL,
-            topic TEXT NOT NULL,
-            difficulty INTEGER NOT NULL,
-            points INTEGER NOT NULL)"""
-        )
-        # conn.execute("""DROP TABLE quiz_results""")
-        conn.execute('''CREATE TABLE IF NOT EXISTS quiz_results (
-            user_id TEXT,
-            question_id	INTEGER,
-            time_started INTEGER,
-            time_completed INTEGER,
-            question_asked INTEGER,
-            answer_picked INTEGER,
-            is_correct INTEGER,
-            points_available INTEGER,
-            points_earned INTEGER,
-            FOREIGN KEY(question_id) REFERENCES quiz_questions(id))'''
-        )
-    conn.close()
 
 def ask_questions(topic_requested, questions_dict, difficulty, points):
     time_started = datetime.now()

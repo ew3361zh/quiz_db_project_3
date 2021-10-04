@@ -11,14 +11,20 @@ class View:
         self.view_model = view_model
 
     # TODO asking user for what? topic? or to insert data in results db?
-    # def get_new_vehicles(self):
+    def get_topics(self):
 
-    #     header('Insert new vehicles into the database')
+        header('Welcome to our quiz program!\nYou can choose to answer questions from the following categories:')
 
-    #     while True:
-    #         vehicle = self.get_one_new_vehicle()
-    #         if not vehicle:
-    #             break
+        try:           
+            topics = self.view_model.get_topics()
+            return topics
+        except QuizError as e:
+            print(str(e))
+
+    def show_topics(self, topics):
+        for count, topic in enumerate(topics):
+            print(count+1, topic)
+        
 
     # TODO maybe get_new_vehicle is get topic from user 
     # and then this gets questions from db?
