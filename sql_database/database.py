@@ -94,8 +94,13 @@ class QuizquestionDB():
     
     def show_results(self, user_id):
         conn = sqlite3.connect(db)
-        results = conn.execute('SELECT * FROM quiz_results WHERE user_id = ?', (user_id,))
-        most_recent_quiz_results = []
-        # for row in results:
-        #     #TODO query database to get results and display them to user
-        # conn.close()
+        results = conn.execute("""SELECT  
+                                COUNT(question_id) AS questions_answered,
+                                (SUM(time_completed)-SUM(time_started)) AS time_taken,
+                                SUM(is_correct) AS number_correct,
+                                SUM(points_available) AS total_points_available,
+                                SUM(points_earned) AS total_points_earned,
+                                SUM(points_earned)/SUM(points_available)*100 AS percent_correct
+                                FROM quiz_results WHERE user_id = ?""", (user_id,))
+        conn.close()
+        return results

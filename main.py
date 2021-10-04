@@ -22,7 +22,9 @@ def main():
     
     questions, difficulty, points = quiz_question_view.get_questions(topic_requested)
 
-    results = quiz_question_view.ask_questions(questions, difficulty, points)
+    user_id = quiz_question_view.ask_questions(questions, difficulty, points)
+
+    quiz_question_view.show_results(user_id)
 
 
 if __name__ == '__main__':

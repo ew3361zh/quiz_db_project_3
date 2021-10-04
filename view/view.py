@@ -90,60 +90,16 @@ class View:
                 self.view_model.add_result(result)
             except QuizError as e:
                 print(str(e))
+        return user_id
 
-    # def get_one_new_vehicle(self):
-    #     name = input('Enter new vehicle name to insert, or enter to quit: ')
-    #     if not name:
-    #         return 
+    def show_results(self, user_id):
+        try:
+            results = self.view_model.show_results(user_id)
+            for result in results: # TODO add to view_util to print out results more cleanly
+                print(result)
+            print('\n')
+            print('Thank you for using the quiz program! ')
+        except QuizError as e:
+            print(str(e))
 
-    #     miles = input_positive_float(f'Enter new miles driven for {name}: ')
-    #     vehicle = Vehicle(name, miles)
-    #     try:
-    #         self.view_model.insert(vehicle)
-    #         return vehicle
-    #     except MileageError as e:
-    #         print(str(e))
-
-    # TODO possible placeholder function for querying results once quiz is over
-
-    # def update_existing_vehicles(self):
-
-    #     header('Update miles for vehicles already in the database')
-
-    #     while True:
-    #         vehicle = self.update_one_vehicle()
-    #         if not vehicle:
-    #             break
-
-
-    # TODO not sure if this has a place in my converting all this to my methods
-
-    # def update_one_vehicle(self):
-    #     name = input('Enter existing vehicle name or enter to stop updating vehicles: ')
-    #     if not name:
-    #         return
-
-    #     miles = input_positive_float(f'Enter new miles driven for {name}: ')
-        
-    #     vehicle = Vehicle(name, miles)
-        
-    #     # Can substitute a Van for a Vehicle - code all still works, 
-    #     # although DB would need to be updated to store the extra field. 
-        
-    #     # seats = int(input('Enter seats for van: '))
-    #     # vehicle = Van(name, seats)
-        
-    #     try:
-    #         self.view_model.increase_miles(vehicle, miles)
-    #         return vehicle
-    #     except MileageError as e:
-    #         print(str(e))
-
-    # TODO show questions based on topic?
-    # def display_all_data(self):
-
-    #     header('All vehicles in the database')
-
-    #     all_vehicles = self.view_model.get_all()
-    #     show_vehicle_list(all_vehicles)
    
