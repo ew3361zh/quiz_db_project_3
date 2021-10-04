@@ -46,8 +46,8 @@ class QuizquestionDB():
                 points_earned INTEGER,
                 FOREIGN KEY(question_id) REFERENCES quiz_questions(id))'''
             )
-        # commenting out close connection here because otherwise getting "cannot operate on a closed database" error
-        # conn.close()
+        # still facing closed db issue in below functions
+        # conn.commit()
 
     def get_topics(self):
         # conn = sqlite3.connect(db)
@@ -68,7 +68,7 @@ class QuizquestionDB():
     def get_questions(self, topic):
         # conn = sqlite3.connect(db)
         with sqlite3.connect(db) as conn:
-            results = conn.execute('SELECT * FROM quiz_questions WHERE topic = ?', (topic,))
+            results = conn.execute('SELECT * FROM quiz_questions WHERE topic = ?', (topic.lower(),))
             questions_answers = []
             difficulty = []
             points = []
