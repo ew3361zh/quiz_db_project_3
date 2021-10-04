@@ -1,6 +1,8 @@
+# TODO high level configuration, set up any other modules the program needs
 """
 Adaptatation from week5 chainsaws database program
 """
+from sql_database.database import Quizquestion
 import sqlite3
 import random
 from datetime import datetime, date, time

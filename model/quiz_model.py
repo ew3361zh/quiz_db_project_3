@@ -1,3 +1,5 @@
+# model class representing one entry for a quiz question and possibly one entry for a quiz result
+
 """
 Model objects 
 """
