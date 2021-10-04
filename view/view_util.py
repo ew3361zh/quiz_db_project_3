@@ -19,6 +19,7 @@ def header(text):
     print(f'\n{stars}\n{text}\n{stars}\n')
 
 def validate_topic_chosen(topics):
+    print('\n')
     topic_requested = input('Please select the number of the topic would you like to be quizzed: ')
     while topic_requested.isnumeric() is False or int(topic_requested) > len(topics) or int(topic_requested) == 0: # validation based on keys and using .lower() to make sure case isn't a cause of user input being rejected
         print('Please only choose from one of the below listed categories\n')

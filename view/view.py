@@ -4,7 +4,7 @@
 import random
 from datetime import datetime, date, time
 import uuid
-from view_util import input_pos_int, header
+from view.view_util import input_pos_int, header, validate_topic_chosen
 from model.quiz_model import Quizquestion
 from exceptions.quiz_error import QuizError
 
@@ -27,7 +27,7 @@ class View:
     def choose_topic(self, topics):
         for count, topic in enumerate(topics):
             print(count+1, topic)
-        topic_requested_num = view_util.validate_topic_chosen(topics)
+        topic_requested_num = validate_topic_chosen(topics)
         topic_requested = topics[topic_requested_num].upper()
         print(f'You selected {topic_requested.upper()}')
         return topic_requested
@@ -47,7 +47,7 @@ class View:
         time_started = datetime.now()
         user_id = str(uuid.uuid4())
         question_counter = 0
-        for question, answer in questions_dict.items():
+        for question, answer in questions.items():
             time_started = datetime.now()
             header(f'Question #{question_counter+1} in the {topic_requested} category\nDifficulty of {difficulty[question_counter]} with {points[question_counter]} points available:')
             print(question)
