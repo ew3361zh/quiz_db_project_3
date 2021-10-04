@@ -39,12 +39,12 @@ class View:
         
         try:
             questions, difficulty, points = self.view_model.get_questions(topic)
-            self.ask_questions(questions, difficulty, points)
+            self.ask_questions(questions, difficulty, points, topic)
         except QuizError as e:
             print(str(e))
 
 
-    def ask_questions(self, questions, difficulty, points):
+    def ask_questions(self, questions, difficulty, points, topic_requested):
         
         time_started = datetime.now()
         user_id = str(uuid.uuid4())

@@ -16,7 +16,7 @@ def main():
 
     quiz_question_view = View(quiz_question_view_model)
 
-    quiz_question_view.get_topics()  # do I need to have a place for the topics return to land here?
+    quiz_question_view.get_topics()
     
     # topic_requested = quiz_question_view.choose_topic(topics)  # so I also am calling the show_topics with topics as argument...
     
