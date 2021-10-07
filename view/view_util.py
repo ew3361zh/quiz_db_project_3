@@ -3,6 +3,10 @@
 Input and validation utilities
 """
 
+def get_user_answer():
+    return input('enter answer')
+    # todo validation
+
 def input_pos_int(question):
     while True:
         try:
