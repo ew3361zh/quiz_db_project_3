@@ -30,7 +30,7 @@ class QuizquestionDB():
                 difficulty INTEGER NOT NULL,
                 points INTEGER NOT NULL)"""
             )
-            # conn.execute("""DROP TABLE quiz_results""") # keeping in case I need it
+            
             conn.execute('''CREATE TABLE IF NOT EXISTS quiz_results (
                 user_id TEXT,
                 question_id	INTEGER,
