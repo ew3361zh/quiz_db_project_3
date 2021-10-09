@@ -65,24 +65,24 @@ class View:
             #     print(f'{q_num+1}:{a}')
             # print('\n')
             # user_answer = input('What is your answer? ')
-            while user_answer.isnumeric() is False or int(user_answer) not in range(1,5): # TODO add to view_util?
-                print('\n')
-                user_answer = input('Please try again and select the number answer you believe is correct')
-            time_completed = get_time()
-            user_answer = int(user_answer)-1
-            print('\n')
-            print(f'User answer is {answer[user_answer]}')
-            print('\n')
-            is_correct = 1
-            if answer[user_answer] == correct_answer: # TODO add as view_util?
-                print('Correctamundo!')
-            else:
-                print(f'I\'m deeply sorry but the correct answer is {correct_answer}')
-                is_correct = 0
-            if is_correct == 1: # TODO add to view_util?
-                points_earned = points[question_counter]
-            else:
-                points_earned = 0
+            # while user_answer.isnumeric() is False or int(user_answer) not in range(1,5): # TODO add to view_util?
+            #     print('\n')
+            #     user_answer = input('Please try again and select the number answer you believe is correct')
+            # # time_completed = get_time()
+            # user_answer = int(user_answer)-1
+            # print('\n')
+            # print(f'User answer is {answer[user_answer]}')
+            # print('\n')
+            # is_correct = 1
+            # if answer[user_answer] == correct_answer: # TODO add as view_util?
+            #     print('Correctamundo!')
+            # else:
+            #     print(f'I\'m deeply sorry but the correct answer is {correct_answer}')
+            #     is_correct = 0
+            # if is_correct == 1: # TODO add to view_util?
+            #     points_earned = points[question_counter]
+            # else:
+            #     points_earned = 0
             result = [] # TODO have a separate compiler for result? view_util?
             result.append(user_id)
             result.append(question_counter+1)

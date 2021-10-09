@@ -59,17 +59,33 @@ def get_time():
 
 def ask_one_question(questions, question_counter, user_id):
     for question in questions:
-        if questions.id == question_counter:
+        if question.id == question_counter:
             header(f'Question #{question_counter+1} in the {question.topic} category\nDifficulty of {question.difficulty} with {question.points} points available:')
-            print(questions.question)
+            print(question.question)             
             answers = show_randomized_answers(question)
             time_started = get_time()
             print('\n')
             user_answer = get_user_answer()
+            time_completed = get_time()
             print(f'User answer is {answers[user_answer]}')
             is_correct = check_if_correct(answers[user_answer], question.correct_answer)
+            if is_correct:
+                points_earned = question.points
+            else:
+                points_earned = 0
+            result = QuizResult(user_id, 
+                                question.id, 
+                                time_started, 
+                                time_completed, 
+                                question.question, 
+                                answers[user_answer],
+                                is_correct,
+                                question.points,
+                                points_earned )
+            return result
         else:
             pass
+
 
 def show_randomized_answers(question):
     answers = [question.correct_answer, question.wrong_answer_1, question.wrong_answer_2, question.wrong_answer_3]
@@ -89,8 +105,10 @@ def get_user_answer():
 
 def check_if_correct(user_guess, correct_answer):
     if user_guess == correct_answer:
+        print('Correctamundo!')
         return True
     else:
+        print(f'I\'m deeply sorry but the correct answer is {correct_answer}')
         return False
 
 # TODO 2. see view ask_questions function for more possible view_util additions
