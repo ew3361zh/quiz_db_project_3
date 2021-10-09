@@ -3,7 +3,7 @@
 
 import random
 
-from view.view_util import input_pos_int, header, validate_topic_chosen, generate_user_id, get_time, ask_one_question
+from view.view_util import input_pos_int, header, validate_topic_chosen, generate_user_id, get_time, show_randomized_answers, get_user_answer, check_if_correct
 from model.quiz_model import QuizQuestion, QuizResult
 from exceptions.quiz_error import QuizError
 
@@ -14,7 +14,7 @@ class View:
 
 
     def start_quiz(self):
-        user_id = generate_user_id() #TODO make view_util for getting user_id
+        user_id = generate_user_id()
         topics = self.get_topics()
         topic_requested = self.choose_topic(topics)
         questions = self.get_questions(topic_requested)
@@ -53,53 +53,40 @@ class View:
     # TODO make ask_question a view_util
     # TODO don't forget to add user_id as parameter or if results are being recorded in another piece put it there
     def ask_questions(self, questions, user_id):
-        
-        for question_counter in range(len(questions)):
-            result = ask_one_question(questions, question_counter, user_id)
-            
-        # for question, answer in questions.items():
-                      
-            # correct_answer = answer[0]
-            # random.shuffle(answer)
-            # for q_num, a in enumerate(answer):
-            #     print(f'{q_num+1}:{a}')
-            # print('\n')
-            # user_answer = input('What is your answer? ')
-            # while user_answer.isnumeric() is False or int(user_answer) not in range(1,5): # TODO add to view_util?
-            #     print('\n')
-            #     user_answer = input('Please try again and select the number answer you believe is correct')
-            # # time_completed = get_time()
-            # user_answer = int(user_answer)-1
-            # print('\n')
-            # print(f'User answer is {answer[user_answer]}')
-            # print('\n')
-            # is_correct = 1
-            # if answer[user_answer] == correct_answer: # TODO add as view_util?
-            #     print('Correctamundo!')
-            # else:
-            #     print(f'I\'m deeply sorry but the correct answer is {correct_answer}')
-            #     is_correct = 0
-            # if is_correct == 1: # TODO add to view_util?
-            #     points_earned = points[question_counter]
-            # else:
-            #     points_earned = 0
-            result = [] # TODO have a separate compiler for result? view_util?
-            result.append(user_id)
-            result.append(question_counter+1)
-            result.append(time_started)
-            result.append(time_completed)
-            result.append(question)
-            result.append(answer[user_answer])
-            result.append(is_correct)
-            result.append(points[question_counter])
-            result.append(points_earned)
+        question_counter = 0
+        for question in questions:
+            result = self.ask_one_question(question, user_id, question_counter)
             try:
                 self.view_model.add_result(result)
             except QuizError as e:
                 print(str(e))
             question_counter = question_counter + 1 # count of which question user is on needs to increase each time a question is asked
-        self.show_results(user_id)
     
+    def ask_one_question(self, question, user_id, question_counter):
+            
+        header(f'Question #{question_counter+1} in the {question.topic} category\nDifficulty of {question.difficulty} with {question.points} points available:')
+        print(question.question_text)             
+        answers = show_randomized_answers(question)
+        time_started = get_time()
+        print('\n')
+        user_answer = get_user_answer()
+        time_completed = get_time()
+        print(f'User answer is {answers[user_answer]}')
+        is_correct = check_if_correct(answers[user_answer], question.correct_answer)
+        if is_correct:
+            points_earned = question.points
+        else:
+            points_earned = 0
+        result = QuizResult(user_id, 
+                            question.id, 
+                            time_started, 
+                            time_completed, 
+                            question.question_text, 
+                            answers[user_answer],
+                            is_correct,
+                            question.points,
+                            points_earned )
+        return result
 
     def show_results(self, user_id):
         

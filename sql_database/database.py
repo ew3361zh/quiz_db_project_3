@@ -68,7 +68,7 @@ class QuizquestionDB():
         # conn = sqlite3.connect(db)
         with sqlite3.connect(db) as conn:
             results = conn.execute('SELECT * FROM quiz_questions WHERE topic = ?', (topic.lower(),))
-            questions = [ QuizQuestion(*row) for row in results.fetchall()] 
+            questions = [QuizQuestion(*row) for row in results.fetchall()]
         conn.close()
         return questions
         
@@ -79,20 +79,19 @@ class QuizquestionDB():
         # possibly try Clara's version where she records rows_modified as variable for execute statement
         with sqlite3.connect(db) as conn:
             conn.execute(f'INSERT INTO quiz_results VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', 
-                        (result[0],
-                        result[1], 
-                        result[2], 
-                        result[3],
-                        result[4], 
-                        result[5],
-                        result[6],
-                        result[7],
-                        result[8]))
+                        (result.user_id,
+                        result.question_id, 
+                        result.time_started, 
+                        result.time_completed,
+                        result.question_asked, 
+                        result.answer_picked,
+                        result.is_correct,
+                        result.points_available,
+                        result.points_earned))
         conn.close()
     
     def show_results(self, user_id):
         # conn = sqlite3.connect(db)
-        print(user_id)
         with sqlite3.connect(db) as conn:
 
             # TODO create results_summary object in objects and import here to make more readable

@@ -57,36 +57,6 @@ def get_time():
     current_time = datetime.now().timestamp()
     return current_time
 
-def ask_one_question(questions, question_counter, user_id):
-    for question in questions:
-        if question.id == question_counter:
-            header(f'Question #{question_counter+1} in the {question.topic} category\nDifficulty of {question.difficulty} with {question.points} points available:')
-            print(question.question)             
-            answers = show_randomized_answers(question)
-            time_started = get_time()
-            print('\n')
-            user_answer = get_user_answer()
-            time_completed = get_time()
-            print(f'User answer is {answers[user_answer]}')
-            is_correct = check_if_correct(answers[user_answer], question.correct_answer)
-            if is_correct:
-                points_earned = question.points
-            else:
-                points_earned = 0
-            result = QuizResult(user_id, 
-                                question.id, 
-                                time_started, 
-                                time_completed, 
-                                question.question, 
-                                answers[user_answer],
-                                is_correct,
-                                question.points,
-                                points_earned )
-            return result
-        else:
-            pass
-
-
 def show_randomized_answers(question):
     answers = [question.correct_answer, question.wrong_answer_1, question.wrong_answer_2, question.wrong_answer_3]
     random.shuffle(answers)
