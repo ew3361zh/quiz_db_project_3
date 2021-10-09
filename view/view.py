@@ -93,16 +93,16 @@ class View:
             except QuizError as e:
                 print(str(e))
         self.show_results(user_id)
-
+    
 
     def show_results(self, user_id):
         
         try:
             results = self.view_model.show_results(user_id)
-            for result in results: # TODO add to view_util to print out results more cleanly
-                print(result)
-            print('\n')
-            print('Thank you for using the quiz program! ')
+            # for result in results: # TODO add to view_util to print out results more cleanly
+            #     print(result)
+            # print('\n')
+            # print('Thank you for using the quiz program! ')
         except QuizError as e:
             print(str(e))
 

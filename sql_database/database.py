@@ -97,32 +97,33 @@ class QuizquestionDB():
     
     def show_results(self, user_id):
         # conn = sqlite3.connect(db)
+        print(user_id)
         with sqlite3.connect(db) as conn:
 
             # TODO create results_summary object in objects and import here to make more readable
             
             # count of how many questions user was asked
-            questions_asked_query = conn.execute('SELECT COUNT(question_id) WHERE used_id = ?', (used_id))
+            questions_asked_query = conn.execute('SELECT COUNT(question_id) FROM quiz_results WHERE user_id = ?', (user_id,))
             questions_asked_count = questions_asked_query.fetchone()[0]
             
             # calculation of the difference between sum of time completed and time started for all questions
-            time_started_sum_query = conn.execute('SELECT SUM(time_started) WHERE used_id = ?', (used_id))
-            time_started_count = time_completed_sum_query.fetchone()[0]
-            time_completed_sum_query = conn.execute('SELECT SUM(time_completed) WHERE used_id = ?', (used_id))
+            time_started_sum_query = conn.execute('SELECT SUM(time_started) FROM quiz_results WHERE user_id = ?', (user_id,))
+            time_started_count = time_started_sum_query.fetchone()[0]
+            time_completed_sum_query = conn.execute('SELECT SUM(time_completed) FROM quiz_results WHERE user_id = ?', (user_id,))
             time_completed_count = time_completed_sum_query.fetchone()[0]
             total_time_taken = time_completed_count - time_started_count
             # TODO convert time_started_count to readable result for user
 
             # sum of correct answers
-            questions_correct_query = conn.execute('SELECT SUM(is_correct) WHERE used_id = ?', (used_id))
+            questions_correct_query = conn.execute('SELECT SUM(is_correct) FROM quiz_results WHERE user_id = ?', (user_id,))
             questions_correct_count = questions_correct_query.fetchone()[0]
 
             # sum of points available
-            points_available_query = conn.execute('SELECT SUM(points_available) WHERE used_id = ?', (used_id))
+            points_available_query = conn.execute('SELECT SUM(points_available) FROM quiz_results WHERE user_id = ?', (user_id,))
             points_available_count = points_available_query.fetchone()[0]
 
             # sum of points_earned
-            points_earned_query = conn.execute('SELECT SUM(points_earned) WHERE used_id = ?', (used_id))
+            points_earned_query = conn.execute('SELECT SUM(points_earned) FROM quiz_results WHERE user_id = ?', (user_id,))
             points_earned_count = points_earned_query.fetchone()[0]
 
             # calculation of % points to 1 decimal place
