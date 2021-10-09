@@ -2,10 +2,9 @@
 # doesn't want to think about details of how to query db, delegate that to view_model
 
 import random
-from datetime import datetime, date, time
-import uuid
-from view.view_util import input_pos_int, header, validate_topic_chosen
-from model.quiz_model import Quizquestion
+
+from view.view_util import input_pos_int, header, validate_topic_chosen, generate_user_id, get_time
+from model.quiz_model import QuizQuestion, QuizResult
 from exceptions.quiz_error import QuizError
 
 class View:
@@ -17,10 +16,10 @@ class View:
     def start_quiz(self):
         user_id = generate_user_id() #TODO make view_util for getting user_id
         topics = self.get_topics()
-        topic = self.choose_topic(topics)
-        questions = get_questions(topic)
-        ask_questions(questions)
-        show_results(user_id)
+        topic_requested = self.choose_topic(topics)
+        questions = self.get_questions(topic_requested)
+        self.ask_questions(questions, user_id)
+        self.show_results(user_id)
 
     def get_topics(self):
 
@@ -28,7 +27,7 @@ class View:
 
         try:           
             topics = self.view_model.get_topics()
-            self.choose_topic(topics)
+            return topics
         except QuizError as e:
             print(str(e))
 
@@ -39,25 +38,25 @@ class View:
         topic_requested_num = validate_topic_chosen(topics)
         topic_requested = topics[topic_requested_num].upper()
         print(f'You selected {topic_requested.upper()}')
-        self.get_questions(topic_requested)
-
+        return topic_requested
     
     def get_questions(self, topic):
         
         try:
-            questions, difficulty, points = self.view_model.get_questions(topic)
-            self.ask_questions(questions, difficulty, points, topic)
+            questions = self.view_model.get_questions(topic) # TODO use question object to return questions, not weird lists and dictionaries
+            return questions
         except QuizError as e:
             print(str(e))
 
 
-    def ask_questions(self, questions, difficulty, points, topic_requested):
+    # TODO redesign ask_questions around question object
+    # TODO make ask_question a view_util
+    # TODO don't forget to add user_id as parameter or if results are being recorded in another piece put it there
+    def ask_questions(self, questions, user_id):
         
-        time_started = datetime.now()
-        user_id = str(uuid.uuid4())
         question_counter = 0
         for question, answer in questions.items():
-            time_started = datetime.now().timestamp()
+            time_started = get_time()
             header(f'Question #{question_counter+1} in the {topic_requested} category\nDifficulty of {difficulty[question_counter]} with {points[question_counter]} points available:')
             print(question)
             print('\n')
@@ -70,7 +69,7 @@ class View:
             while user_answer.isnumeric() is False or int(user_answer) not in range(1,5): # TODO add to view_util?
                 print('\n')
                 user_answer = input('Please try again and select the number answer you believe is correct')
-            time_completed = datetime.now().timestamp()
+            time_completed = get_time()
             user_answer = int(user_answer)-1
             print('\n')
             print(f'User answer is {answer[user_answer]}')
@@ -107,7 +106,7 @@ class View:
         
         try:
             results = self.view_model.show_results(user_id)
-            # for result in results: # TODO add to view_util to print out results more cleanly
+            # for result in results: # TODO use print out from database as model for here but after it's been changed to a Result Summary object
             #     print(result)
             # print('\n')
             # print('Thank you for using the quiz program! ')

@@ -4,7 +4,7 @@
 Model objects 
 """
 
-class Quizquestion():
+class QuizQuestion():
 
     def __init__(self, 
                 id, 
@@ -29,9 +29,9 @@ class Quizquestion():
 
     
     def __str__(self):
-        return f'{self.id}, {self.question_text}, {self.correct_answer}, {self.topic}, {self.difficulty}, {self.points}'
+        return f'{self.id}, {self.question_text}, {self.correct_answer}, {self.wrong_answer_1}, {self.wrong_answer_2}, {self.wrong_answer_3}, {self.topic}, {self.difficulty}, {self.points}'
 
-class Quizresult():
+class QuizResult():
 
     def __init__(self,
                 user_id,
@@ -57,6 +57,8 @@ class Quizresult():
     def __str__(self):
         return f'{self.user_id}, {self.time_started}, {self.time_completed}, {self.is_correct}, {self.points_available}, {self.points_earned}'
 
+
+# TODO create QuizResultSummary object
 
 if __name__ == '__main__':
     main()

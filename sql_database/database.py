@@ -11,7 +11,7 @@ from .config import db_path
 from exceptions.quiz_error import QuizError
 
 # from database import VehicleDB TODO rewatch videos on abstract methods
-from model.quiz_model import Quizquestion
+from model.quiz_model import QuizQuestion, QuizResult
 from utils.validation import ensure_positive_int
 
 db = db_path
@@ -68,16 +68,11 @@ class QuizquestionDB():
         # conn = sqlite3.connect(db)
         with sqlite3.connect(db) as conn:
             results = conn.execute('SELECT * FROM quiz_questions WHERE topic = ?', (topic.lower(),))
-            questions_answers = []
-            difficulty = []
-            points = []
-            for row in results:
-                questions_answers.append((row[1], [row[2], row[3], row[4], row[5]]))
-                difficulty.append(row[7]) 
-                points.append(row[8])
-            questions_dict = dict(questions_answers)
+            questions = [ QuizQuestion(*row) for row in results.fetchall()] 
         conn.close()
-        return questions_dict, difficulty, points
+        return questions
+        
+        # return questions_dict, difficulty, points
     
     def add_result(self, result):
         # TODO get all the below data into a result variable as list(?)
