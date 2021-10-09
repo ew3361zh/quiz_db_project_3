@@ -2,8 +2,10 @@
 Input and validation utilities
 """
 
+import random
 import uuid
 from datetime import datetime, date, time
+from model.quiz_model import QuizResult
 
 def input_pos_int(question):
     """
@@ -55,5 +57,40 @@ def get_time():
     current_time = datetime.now().timestamp()
     return current_time
 
-# TODO 1. maybe a randomize and print q answers function? or separate into two functions - a randomize and a display?
+def ask_one_question(questions, question_counter, user_id):
+    for question in questions:
+        if questions.id == question_counter:
+            header(f'Question #{question_counter+1} in the {question.topic} category\nDifficulty of {question.difficulty} with {question.points} points available:')
+            print(questions.question)
+            answers = show_randomized_answers(question)
+            time_started = get_time()
+            print('\n')
+            user_answer = get_user_answer()
+            print(f'User answer is {answers[user_answer]}')
+            is_correct = check_if_correct(answers[user_answer], question.correct_answer)
+        else:
+            pass
+
+def show_randomized_answers(question):
+    answers = [question.correct_answer, question.wrong_answer_1, question.wrong_answer_2, question.wrong_answer_3]
+    random.shuffle(answers)
+    for q_num, a in enumerate(answers):
+        print(f'{q_num+1}:{a}')
+    return answers
+
+def get_user_answer():
+    user_answer = input('What is your answer? ')
+    while user_answer.isnumeric() is False or int(user_answer) not in range(1,5):
+        print('\n')
+        user_answer = input('Please try again and select the number answer you believe is correct')
+    user_answer = int(user_answer)-1
+    print('\n')
+    return user_answer
+
+def check_if_correct(user_guess, correct_answer):
+    if user_guess == correct_answer:
+        return True
+    else:
+        return False
+
 # TODO 2. see view ask_questions function for more possible view_util additions

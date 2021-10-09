@@ -3,7 +3,7 @@
 
 import random
 
-from view.view_util import input_pos_int, header, validate_topic_chosen, generate_user_id, get_time
+from view.view_util import input_pos_int, header, validate_topic_chosen, generate_user_id, get_time, ask_one_question
 from model.quiz_model import QuizQuestion, QuizResult
 from exceptions.quiz_error import QuizError
 
@@ -54,18 +54,17 @@ class View:
     # TODO don't forget to add user_id as parameter or if results are being recorded in another piece put it there
     def ask_questions(self, questions, user_id):
         
-        question_counter = 0
-        for question, answer in questions.items():
-            time_started = get_time()
-            header(f'Question #{question_counter+1} in the {topic_requested} category\nDifficulty of {difficulty[question_counter]} with {points[question_counter]} points available:')
-            print(question)
-            print('\n')
-            correct_answer = answer[0]
-            random.shuffle(answer)
-            for q_num, a in enumerate(answer):
-                print(f'{q_num+1}:{a}')
-            print('\n')
-            user_answer = input('What is your answer? ')
+        for question_counter in range(len(questions)):
+            result = ask_one_question(questions, question_counter, user_id)
+            
+        # for question, answer in questions.items():
+                      
+            # correct_answer = answer[0]
+            # random.shuffle(answer)
+            # for q_num, a in enumerate(answer):
+            #     print(f'{q_num+1}:{a}')
+            # print('\n')
+            # user_answer = input('What is your answer? ')
             while user_answer.isnumeric() is False or int(user_answer) not in range(1,5): # TODO add to view_util?
                 print('\n')
                 user_answer = input('Please try again and select the number answer you believe is correct')
