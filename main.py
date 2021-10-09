@@ -10,7 +10,6 @@ from view_model import ViewModel
 def main():
 
     quizquestion_db = QuizquestionDB()
-    #vehicle_db = APIVehicleDB()    # Replace the SQLVehicleDB with this to use the API - code will be happy
 
     quiz_question_view_model = ViewModel(quizquestion_db)
 
@@ -18,14 +17,6 @@ def main():
 
     quiz_question_view.get_topics()
     
-    # topic_requested = quiz_question_view.choose_topic(topics)  # so I also am calling the show_topics with topics as argument...
-    
-    # questions, difficulty, points = quiz_question_view.get_questions(topic_requested)
-
-    # user_id = quiz_question_view.ask_questions(questions, difficulty, points)
-
-    # quiz_question_view.show_results(user_id)
-
 
 if __name__ == '__main__':
     main()

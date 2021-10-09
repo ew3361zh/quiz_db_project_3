@@ -111,7 +111,7 @@ class QuizquestionDB():
             time_started_count = time_started_sum_query.fetchone()[0]
             time_completed_sum_query = conn.execute('SELECT SUM(time_completed) FROM quiz_results WHERE user_id = ?', (user_id,))
             time_completed_count = time_completed_sum_query.fetchone()[0]
-            total_time_taken = time_completed_count - time_started_count
+            total_time_taken = round(time_completed_count - time_started_count, 2)
             # TODO convert time_started_count to readable result for user
 
             # sum of correct answers
@@ -130,7 +130,7 @@ class QuizquestionDB():
             percent_correct = round(points_earned_count/points_available_count * 100, 1)
                                 
             print(f'User got {questions_correct_count} questions correct out of a possible {questions_asked_count}')
-            print(f'Total time taken was {total_time_taken} units')
+            print(f'Total time taken was {total_time_taken} seconds')
             print(f'User earned {points_earned_count} out of a possible {points_available_count} points which is a score of {percent_correct}%')
 
         conn.close()

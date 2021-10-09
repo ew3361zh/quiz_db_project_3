@@ -50,7 +50,7 @@ class View:
         user_id = str(uuid.uuid4())
         question_counter = 0
         for question, answer in questions.items():
-            time_started = datetime.now()
+            time_started = datetime.now().timestamp()
             header(f'Question #{question_counter+1} in the {topic_requested} category\nDifficulty of {difficulty[question_counter]} with {points[question_counter]} points available:')
             print(question)
             print('\n')
@@ -63,7 +63,7 @@ class View:
             while user_answer.isnumeric() is False or int(user_answer) not in range(1,5): # TODO add to view_util?
                 print('\n')
                 user_answer = input('Please try again and select the number answer you believe is correct')
-            time_completed = datetime.now()
+            time_completed = datetime.now().timestamp()
             user_answer = int(user_answer)-1
             print('\n')
             print(f'User answer is {answer[user_answer]}')
@@ -92,6 +92,7 @@ class View:
                 self.view_model.add_result(result)
             except QuizError as e:
                 print(str(e))
+            question_counter = question_counter + 1 # count of which question user is on needs to increase each time a question is asked
         self.show_results(user_id)
     
 
