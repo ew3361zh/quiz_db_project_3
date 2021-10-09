@@ -58,6 +58,9 @@ def get_time():
     return current_time
 
 def show_randomized_answers(question):
+    """ 
+    function to take list of answers for a particular quiz question and print them in a random order
+    """
     answers = [question.correct_answer, question.wrong_answer_1, question.wrong_answer_2, question.wrong_answer_3]
     random.shuffle(answers)
     for q_num, a in enumerate(answers):
@@ -65,6 +68,9 @@ def show_randomized_answers(question):
     return answers
 
 def get_user_answer():
+    """ 
+    function to validate user response is within range of possible answers
+    """
     user_answer = input('What is your answer? ')
     while user_answer.isnumeric() is False or int(user_answer) not in range(1,5):
         print('\n')
@@ -74,11 +80,12 @@ def get_user_answer():
     return user_answer
 
 def check_if_correct(user_guess, correct_answer):
+    """ 
+    function to check user answer against correct answer
+    """
     if user_guess == correct_answer:
         print('Correctamundo!')
         return True
     else:
         print(f'I\'m deeply sorry but the correct answer is {correct_answer}')
         return False
-
-# TODO 2. see view ask_questions function for more possible view_util additions

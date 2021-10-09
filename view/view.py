@@ -1,10 +1,9 @@
-# TODO user-interaction: getting data, printing data; details delegated to view_utils
 # doesn't want to think about details of how to query db, delegate that to view_model
 
 import random
 
 from view.view_util import input_pos_int, header, validate_topic_chosen, generate_user_id, get_time, show_randomized_answers, get_user_answer, check_if_correct
-from model.quiz_model import QuizQuestion, QuizResult
+from model.quiz_model import QuizQuestion, QuizResult, QuizResultSummary
 from exceptions.quiz_error import QuizError
 
 class View:
@@ -49,9 +48,6 @@ class View:
             print(str(e))
 
 
-    # TODO redesign ask_questions around question object
-    # TODO make ask_question a view_util
-    # TODO don't forget to add user_id as parameter or if results are being recorded in another piece put it there
     def ask_questions(self, questions, user_id):
         question_counter = 0
         for question in questions:
@@ -61,7 +57,8 @@ class View:
             except QuizError as e:
                 print(str(e))
             question_counter = question_counter + 1 # count of which question user is on needs to increase each time a question is asked
-    
+
+
     def ask_one_question(self, question, user_id, question_counter):
             
         header(f'Question #{question_counter+1} in the {question.topic} category\nDifficulty of {question.difficulty} with {question.points} points available:')
@@ -91,11 +88,13 @@ class View:
     def show_results(self, user_id):
         
         try:
-            results = self.view_model.show_results(user_id)
-            # for result in results: # TODO use print out from database as model for here but after it's been changed to a Result Summary object
-            #     print(result)
-            # print('\n')
-            # print('Thank you for using the quiz program! ')
+            summary_result = self.view_model.show_results(user_id)
+            header('Here are your quiz results!')
+            print(f'User got {summary_result.questions_correct} questions correct out of a possible {summary_result.questions_asked}')
+            print(f'Total time taken was {summary_result.time_taken} seconds')
+            print(f'User earned {summary_result.total_points_earned} out of a possible {summary_result.total_points_available} points which is a score of {summary_result.percent_correct}%')
+            print('\n')
+            print('Thank you for using the quiz program!')
         except QuizError as e:
             print(str(e))
 

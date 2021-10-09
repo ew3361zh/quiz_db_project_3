@@ -9,13 +9,10 @@ import sqlite3
 # from .config import db  # .config means import from this directory 
 from .config import db_path
 from exceptions.quiz_error import QuizError
-
-# from database import VehicleDB TODO rewatch videos on abstract methods
-from model.quiz_model import QuizQuestion, QuizResult
-from utils.validation import ensure_positive_int
+from model.quiz_model import QuizQuestion, QuizResult, QuizResultSummary
 
 db = db_path
-# from utils.validation import TODO write validation for ints and more specifically for ints within a certain range
+
 
 class QuizquestionDB():
 
@@ -122,10 +119,14 @@ class QuizquestionDB():
 
             # calculation of % points to 1 decimal place
             percent_correct = round(points_earned_count/points_available_count * 100, 1)
-                                
-            print(f'User got {questions_correct_count} questions correct out of a possible {questions_asked_count}')
-            print(f'Total time taken was {total_time_taken} seconds')
-            print(f'User earned {points_earned_count} out of a possible {points_available_count} points which is a score of {percent_correct}%')
+
+
+        summary_result = QuizResultSummary(questions_asked_count,
+                                        questions_correct_count,
+                                        total_time_taken,
+                                        points_available_count,
+                                        points_earned_count,
+                                        percent_correct)             
 
         conn.close()
-        # return results
+        return summary_result

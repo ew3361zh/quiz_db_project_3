@@ -60,5 +60,25 @@ class QuizResult():
 
 # TODO create QuizResultSummary object
 
+class QuizResultSummary():
+    def __init__(self,
+                questions_asked,
+                questions_correct,
+                time_taken,
+                total_points_available,
+                total_points_earned,
+                percent_correct
+                ):
+        self.questions_asked = questions_asked
+        self.questions_correct = questions_correct
+        self.time_taken = time_taken
+        self.total_points_available = total_points_available
+        self.total_points_earned = total_points_earned
+        self.percent_correct = percent_correct
+
+    def __str__(self):
+        return f'{self.questions_asked}, {self.questions_correct}, {self.time_taken}, {self.total_points_available}, {self.total_points_earned}, {self.percent_correct}'
+
+
 if __name__ == '__main__':
     main()
