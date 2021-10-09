@@ -15,7 +15,7 @@ def main():
 
     quiz_question_view = View(quiz_question_view_model)
 
-    quiz_question_view.get_topics()
+    quiz_question_view.start_quiz()
     
 
 if __name__ == '__main__':

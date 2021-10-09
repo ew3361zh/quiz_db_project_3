@@ -13,8 +13,15 @@ class View:
     def __init__(self, view_model):
         self.view_model = view_model
 
-    # main calls this function first which basically kicks off everything and nothing goes back to main right now
-    # TODO send topics to choose topics vs return topics to main which wasn't working?
+
+    def start_quiz(self):
+        user_id = generate_user_id() #TODO make view_util for getting user_id
+        topics = self.get_topics()
+        topic = self.choose_topic(topics)
+        questions = get_questions(topic)
+        ask_questions(questions)
+        show_results(user_id)
+
     def get_topics(self):
 
         header('Welcome to our quiz program!\nYou can choose to answer questions from the following categories:')
