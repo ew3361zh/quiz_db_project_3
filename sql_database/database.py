@@ -46,8 +46,7 @@ class QuizquestionDB():
                 points_earned INTEGER,
                 FOREIGN KEY(question_id) REFERENCES quiz_questions(id))'''
             )
-        # still facing closed db issue in below functions
-        # conn.commit()
+        conn.close()
 
     def get_topics(self):
         # conn = sqlite3.connect(db)
@@ -94,18 +93,44 @@ class QuizquestionDB():
                         result[6],
                         result[7],
                         result[8]))
-        conn.commit()
+        conn.close()
     
     def show_results(self, user_id):
         # conn = sqlite3.connect(db)
         with sqlite3.connect(db) as conn:
-            results = conn.execute("""SELECT  
-                                COUNT(question_id) AS questions_answered,
-                                (SUM(time_completed)-SUM(time_started)) AS time_taken,
-                                SUM(is_correct) AS number_correct,
-                                SUM(points_available) AS total_points_available,
-                                SUM(points_earned) AS total_points_earned,
-                                SUM(points_earned)/SUM(points_available)*100 AS percent_correct
-                                FROM quiz_results WHERE user_id = ?""", (user_id,))
+
+            # TODO create results_summary object in objects and import here to make more readable
+            
+            # count of how many questions user was asked
+            questions_asked_query = conn.execute('SELECT COUNT(question_id) WHERE used_id = ?', (used_id))
+            questions_asked_count = questions_asked_query.fetchone()[0]
+            
+            # calculation of the difference between sum of time completed and time started for all questions
+            time_started_sum_query = conn.execute('SELECT SUM(time_started) WHERE used_id = ?', (used_id))
+            time_started_count = time_completed_sum_query.fetchone()[0]
+            time_completed_sum_query = conn.execute('SELECT SUM(time_completed) WHERE used_id = ?', (used_id))
+            time_completed_count = time_completed_sum_query.fetchone()[0]
+            total_time_taken = time_completed_count - time_started_count
+            # TODO convert time_started_count to readable result for user
+
+            # sum of correct answers
+            questions_correct_query = conn.execute('SELECT SUM(is_correct) WHERE used_id = ?', (used_id))
+            questions_correct_count = questions_correct_query.fetchone()[0]
+
+            # sum of points available
+            points_available_query = conn.execute('SELECT SUM(points_available) WHERE used_id = ?', (used_id))
+            points_available_count = points_available_query.fetchone()[0]
+
+            # sum of points_earned
+            points_earned_query = conn.execute('SELECT SUM(points_earned) WHERE used_id = ?', (used_id))
+            points_earned_count = points_earned_query.fetchone()[0]
+
+            # calculation of % points to 1 decimal place
+            percent_correct = round(points_earned_count/points_available_count * 100, 1)
+                                
+            print(f'User got {questions_correct_count} questions correct out of a possible {questions_asked_count}')
+            print(f'Total time taken was {total_time_taken} units')
+            print(f'User earned {points_earned_count} out of a possible {points_available_count} points which is a score of {percent_correct}%')
+
         conn.close()
-        return results
+        # return results
