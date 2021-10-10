@@ -14,7 +14,7 @@ from model.quiz_model import QuizQuestion, QuizResult, QuizResultSummary
 db = db_path
 
 
-class QuizquestionDB():
+class QuizQuestionDB():
 
     # def create_table():
     def __init__(self):

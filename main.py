@@ -2,14 +2,14 @@
 
 from view import * 
 
-from sql_database.database import QuizquestionDB    # Use this class to use the SQLite DB  
+from sql_database.database import QuizQuestionDB    # Use this class to use the SQLite DB  
 
 from view.view import View 
 from view_model import ViewModel
 
 def main():
 
-    quizquestion_db = QuizquestionDB()
+    quizquestion_db = QuizQuestionDB()
 
     quiz_question_view_model = ViewModel(quizquestion_db)
 
