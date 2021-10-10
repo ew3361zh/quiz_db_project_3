@@ -93,9 +93,12 @@ class TestQuizDB(TestCase):
                         100))
         conn.close()
         expected = (12345, 5, 250000000, 250000030, 'why though?', 'because I said so', 1, 100, 100)
+        print(len(expected))
         self.compare_results_table_to_expected(expected)
-        
-
+    
+    # TODO test insert null value for all the fields in the quiz_results table
+    # TODO test foreign key for question in quiz_results matches question id in quiz_questions
+    # TODO test show results somehow
     
     def compare_results_table_to_expected(self, expected):
 

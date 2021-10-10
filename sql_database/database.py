@@ -32,15 +32,15 @@ class QuizQuestionDB():
             )
             
             conn.execute('''CREATE TABLE IF NOT EXISTS quiz_results (
-                user_id TEXT,
-                question_id	INTEGER,
-                time_started INTEGER,
-                time_completed INTEGER,
-                question_asked INTEGER,
-                answer_picked INTEGER,
-                is_correct INTEGER,
-                points_available INTEGER,
-                points_earned INTEGER,
+                user_id TEXT UNIQUE NOT NULL,
+                question_id	INTEGER NOT_NULL,
+                time_started INTEGER NOT_NULL,
+                time_completed INTEGER NOT_NULL,
+                question_asked INTEGER NOT_NULL,
+                answer_picked INTEGER NOT_NULL,
+                is_correct INTEGER NOT_NULL,
+                points_available INTEGER NOT_NULL,
+                points_earned INTEGER NOT_NULL,
                 FOREIGN KEY(question_id) REFERENCES quiz_questions(id))'''
             )
         conn.close()
