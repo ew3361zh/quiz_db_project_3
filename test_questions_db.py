@@ -80,35 +80,31 @@ class TestQuizDB(TestCase):
     
     def test_add_result_correctly(self):
         # test that correctly assembled result object adds to quiz_results db
+        result = QuizResult(12345, 5, 250000000, 250000030, 'why though?', 'because I said so', 1, 100, 100)
         with sqlite3.connect(self.test_db_url) as conn:
-            conn.execute(f'INSERT INTO quiz_results VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', 
-                        (12345,
-                        5, 
-                        250000000, 
-                        250000030,
-                        'why though?', 
-                        'because I said so',
-                        1,
-                        100,
-                        100))
+            self.db.add_result(result)
         conn.close()
         expected = (12345, 5, 250000000, 250000030, 'why though?', 'because I said so', 1, 100, 100)
         print(len(expected))
         self.compare_results_table_to_expected(expected)
     
-    # TODO test insert null value for all the fields in the quiz_results table
+    def test_insert_null_user_answer_into_quiz_result_entry(self):
+        result_null = QuizResult(12345, 5, 250000000, 250000030, 'why though?', None, 1, 100, 100)
+        conn = sqlite3.connect(self.test_db_url)
+        with self.assertRaises(QuizError):
+            self.db.add_result(result_null)
+        
     # TODO test foreign key for question in quiz_results matches question id in quiz_questions
     # TODO test show results somehow
-    
+
     def compare_results_table_to_expected(self, expected):
-
-        conn = sqlite3.connect(self.test_db_url)
-        all_data = conn.execute('SELECT * FROM quiz_results').fetchall()[0]
-
-        # Same rows in DB as entries in expected dictionary
-        self.assertEqual(len(expected), len(all_data))
-
+        # test that correctly assembled result object adds to quiz_results db
+        with sqlite3.connect(self.test_db_url) as conn:
+            all_data = conn.execute('SELECT * FROM quiz_results').fetchall()[0]
+            # Same rows in DB as entries in expected dictionary
+            self.assertEqual(len(expected), len(all_data))
         conn.close()
+            
     
 if __name__ == '__main__':
     unittest.main()

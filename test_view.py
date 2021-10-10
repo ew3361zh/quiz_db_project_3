@@ -12,7 +12,7 @@ class TestAskQuizQuestions(TestCase):
 
     def test_ask_question(self, mock_get_user_answer): # note second argument
 
-        # TODO inser example questions into db
+        # TODO insert example questions into db
 
         mock_get_user_answer.return_value = 3 # replace with what I want user answer to be for test
 

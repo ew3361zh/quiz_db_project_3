@@ -72,19 +72,23 @@ class QuizQuestionDB():
         # return questions_dict, difficulty, points
     
     def add_result(self, result):
+        if(result.answer_picked is None):
+            raise QuizError('Question must be answered')
+            
+        else:
+            with sqlite3.connect(db) as conn:
+                conn.execute(f'INSERT INTO quiz_results VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', 
+                            (result.user_id,
+                            result.question_id, 
+                            result.time_started, 
+                            result.time_completed,
+                            result.question_asked, 
+                            result.answer_picked,
+                            result.is_correct,
+                            result.points_available,
+                            result.points_earned))
+            conn.close()
         
-        with sqlite3.connect(db) as conn:
-            conn.execute(f'INSERT INTO quiz_results VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', 
-                        (result.user_id,
-                        result.question_id, 
-                        result.time_started, 
-                        result.time_completed,
-                        result.question_asked, 
-                        result.answer_picked,
-                        result.is_correct,
-                        result.points_available,
-                        result.points_earned))
-        conn.close()
     
     def show_results(self, user_id):
         
