@@ -21,10 +21,10 @@ class TestQuizDB(TestCase):
         # adding questions isn't part of the program by design
         # but I believe we still need this method to designate the test table?
 
-        # with sqlite3.connect(self.test_db_url) as conn:
-        #     conn.execute('DROP TABLE IF EXISTS quiz_questions')
-        #     conn.execute('DROP TABLE IF EXISTS quiz_results')
-        # conn.close()
+        with sqlite3.connect(self.test_db_url) as conn:
+            # not dropping quiz_questions table because data insert not being executed in this program
+            conn.execute('DROP TABLE IF EXISTS quiz_results')
+        conn.close()
 
         with sqlite3.connect(self.test_db_url) as conn:
             conn.execute("""CREATE TABLE IF NOT EXISTS quiz_questions (
@@ -39,7 +39,7 @@ class TestQuizDB(TestCase):
                 points INTEGER NOT NULL)"""
             )
 
-            conn.execute('''CREATE TABLE IF NOT EXISTS quiz_results (
+            conn.execute('''CREATE TABLE quiz_results (
                 user_id TEXT,
                 question_id	INTEGER,
                 time_started INTEGER,
@@ -77,22 +77,35 @@ class TestQuizDB(TestCase):
             questions = [QuizQuestion(*row) for row in results.fetchall()]
         conn.close()
         self.assertEqual(questions, [])
+    
+    def test_add_result_correctly(self):
+        # test that correctly assembled result object adds to quiz_results db
+        with sqlite3.connect(self.test_db_url) as conn:
+            conn.execute(f'INSERT INTO quiz_results VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', 
+                        (12345,
+                        5, 
+                        250000000, 
+                        250000030,
+                        'why though?', 
+                        'because I said so',
+                        1,
+                        100,
+                        100))
+        conn.close()
+        expected = (12345, 5, 250000000, 250000030, 'why though?', 'because I said so', 1, 100, 100)
+        self.compare_results_table_to_expected(expected)
+        
 
     
-    # def compare_db_to_expected(self, expected):
+    def compare_results_table_to_expected(self, expected):
 
-    #     conn = sqlite3.connect(self.test_db_url)
-    #     all_data = conn.execute('SELECT * FROM quiz_question').fetchall()
+        conn = sqlite3.connect(self.test_db_url)
+        all_data = conn.execute('SELECT * FROM quiz_results').fetchall()[0]
 
-    #     # Same rows in DB as entries in expected dictionary
-    #     self.assertEqual(len(expected.keys()), len(all_data))
+        # Same rows in DB as entries in expected dictionary
+        self.assertEqual(len(expected), len(all_data))
 
-    #     for row in all_data:
-    #         # Vehicle exists, and mileage is correct
-    #         self.assertIn(row[0], expected.keys())
-    #         self.assertEqual(expected[row[0]], row[1])
-
-    #     conn.close()
+        conn.close()
     
 if __name__ == '__main__':
     unittest.main()

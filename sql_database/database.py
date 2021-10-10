@@ -72,8 +72,7 @@ class QuizQuestionDB():
         # return questions_dict, difficulty, points
     
     def add_result(self, result):
-        # TODO get all the below data into a result variable as list(?)
-        # possibly try Clara's version where she records rows_modified as variable for execute statement
+        
         with sqlite3.connect(db) as conn:
             conn.execute(f'INSERT INTO quiz_results VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)', 
                         (result.user_id,
@@ -88,11 +87,9 @@ class QuizQuestionDB():
         conn.close()
     
     def show_results(self, user_id):
-        # conn = sqlite3.connect(db)
+        
         with sqlite3.connect(db) as conn:
 
-            # TODO create results_summary object in objects and import here to make more readable
-            
             # count of how many questions user was asked
             questions_asked_query = conn.execute('SELECT COUNT(question_id) FROM quiz_results WHERE user_id = ?', (user_id,))
             questions_asked_count = questions_asked_query.fetchone()[0]
