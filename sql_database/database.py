@@ -62,17 +62,19 @@ class QuizQuestionDB():
         return topics
     
     def get_questions(self, topic):
+        if topic is None:
+            raise QuizError('You must select a topic')
+        else:
+            with sqlite3.connect(db) as conn:
+                results = conn.execute('SELECT * FROM quiz_questions WHERE topic = ?', (topic.lower(),))
+                questions = [QuizQuestion(*row) for row in results.fetchall()]
+            conn.close()
+            return questions
         
-        with sqlite3.connect(db) as conn:
-            results = conn.execute('SELECT * FROM quiz_questions WHERE topic = ?', (topic.lower(),))
-            questions = [QuizQuestion(*row) for row in results.fetchall()]
-        conn.close()
-        return questions
-        
-        # return questions_dict, difficulty, points
     
     def add_result(self, result):
-        if(result.answer_picked is None):
+        
+        if result.answer_picked is None:
             raise QuizError('Question must be answered')
             
         else:

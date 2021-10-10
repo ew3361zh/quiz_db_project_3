@@ -49,6 +49,7 @@ class View:
 
 
     def ask_questions(self, questions, user_id):
+        
         question_counter = 0
         for question in questions:
             result = self.ask_one_question(question, user_id, question_counter)

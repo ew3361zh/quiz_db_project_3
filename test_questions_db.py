@@ -85,17 +85,22 @@ class TestQuizDB(TestCase):
             self.db.add_result(result)
         conn.close()
         expected = (12345, 5, 250000000, 250000030, 'why though?', 'because I said so', 1, 100, 100)
-        print(len(expected))
         self.compare_results_table_to_expected(expected)
     
     def test_insert_null_user_answer_into_quiz_result_entry(self):
+        # user only contributes input to two pieces of the db: the topic selected and an answer to a question
+        # this tests if a null response somehow gets by the check in place in view_utils
         result_null = QuizResult(12345, 5, 250000000, 250000030, 'why though?', None, 1, 100, 100)
         conn = sqlite3.connect(self.test_db_url)
         with self.assertRaises(QuizError):
             self.db.add_result(result_null)
-        
-    # TODO test foreign key for question in quiz_results matches question id in quiz_questions
-    # TODO test show results somehow
+
+    def test_user_selects_no_topic_raises_error(self):
+        # test to check if error is raised if second of two user inputs is null - their selected topic
+        topic_null = None
+        conn = sqlite3.connect(self.test_db_url)
+        with self.assertRaises(QuizError):
+            self.db.get_questions(topic_null)
 
     def compare_results_table_to_expected(self, expected):
         # test that correctly assembled result object adds to quiz_results db
