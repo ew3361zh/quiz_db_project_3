@@ -62,7 +62,7 @@ class QuizQuestionDB():
         return topics
     
     def get_questions(self, topic):
-        # conn = sqlite3.connect(db)
+        
         with sqlite3.connect(db) as conn:
             results = conn.execute('SELECT * FROM quiz_questions WHERE topic = ?', (topic.lower(),))
             questions = [QuizQuestion(*row) for row in results.fetchall()]

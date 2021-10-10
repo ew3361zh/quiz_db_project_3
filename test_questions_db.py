@@ -69,7 +69,15 @@ class TestQuizDB(TestCase):
         topics = [i[0] for i in topics]
         self.assertEqual(['space', 'art', 'geoint'], topics)
     
-    
+    def test_get_questions_for_topic_doesnt_exist(self):
+        # try to get questions if user selects topic not in list (and this somehow gets by)
+        topic = 'language' # not an available topic
+        with sqlite3.connect(self.test_db_url) as conn:
+            results = conn.execute('SELECT * FROM quiz_questions WHERE topic = ?', (topic.lower(),))
+            questions = [QuizQuestion(*row) for row in results.fetchall()]
+        conn.close()
+        self.assertEqual(questions, [])
+
     
     # def compare_db_to_expected(self, expected):
 
