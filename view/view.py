@@ -49,7 +49,7 @@ class View:
 
 
     def ask_questions(self, questions, user_id):
-        
+
         question_counter = 0
         for question in questions:
             result = self.ask_one_question(question, user_id, question_counter)
@@ -92,13 +92,14 @@ class View:
             summary_result = self.view_model.show_results(user_id)
             header('Here are your quiz results!')
             if summary_result.questions_correct == 1:
-                print(f'User got {summary_result.questions_correct} question correct out of a possible {summary_result.questions_asked}')
+                print(f'You got {summary_result.questions_correct} question correct out of a possible {summary_result.questions_asked}')
             else:
-                print(f'User got {summary_result.questions_correct} questions correct out of a possible {summary_result.questions_asked}')
+                print(f'You got {summary_result.questions_correct} questions correct out of a possible {summary_result.questions_asked}')
             print(f'Total time taken was {summary_result.time_taken} seconds')
-            print(f'User earned {summary_result.total_points_earned} out of a possible {summary_result.total_points_available} points which is a score of {summary_result.percent_correct}%')
+            print(f'You earned {summary_result.total_points_earned} out of a possible {summary_result.total_points_available} points which is a score of {summary_result.percent_correct}%')
             print('\n')
             print('Thank you for using the quiz program!')
+            print('\n')
         except QuizError as e:
             print(str(e))
 
