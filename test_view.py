@@ -5,6 +5,9 @@ from view import view, view_util
 import builtins
 import importlib
 
+# This part didn't make sense to me - 
+# too many moving parts and new pieces to figure out how to incorporate into a single test (mock, builtins, importlib, patch, magicmock, et al)
+
 class TestAskQuizQuestions(TestCase):
 
     @patch('view_util.get_user_answer') 
