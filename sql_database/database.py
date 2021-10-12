@@ -10,7 +10,7 @@ import sqlite3
 from .config import db_path
 from exceptions.quiz_error import QuizError
 from model.quiz_model import QuizQuestion, QuizResult, QuizResultSummary
-
+from collections import Counter
 db = db_path
 
 
@@ -49,16 +49,22 @@ class QuizQuestionDB():
         # conn = sqlite3.connect(db)
         with sqlite3.connect(db) as conn:
             results = conn.execute('SELECT topic FROM quiz_questions')
-            topics = [] 
+            topics1 = []
+            
             for topic in results:
-                if topic in topics:
-                    pass
-                else:
-                    topics.append(topic)
+                # if topic in topics:
+                #     pass
+                # else:
+                    topics1.append(topic)
+            topics1 = [i[0] for i in topics1]
+            topics = {k:topics1.count(k) for k in set(topics1)}
+            # print(topics)
+            # topics = [i[0] for i in topics]
+            
         conn.close()
         # how to get normal string output from tuple sql query (i.e. turn ('x',) into x):
         # https://stackoverflow.com/questions/47716237/python-list-how-to-remove-parenthesis-quotes-and-commas-in-my-list
-        topics = [i[0] for i in topics]
+        # topics = [i[0] for i in topics]
         return topics
     
     def get_questions(self, topic):

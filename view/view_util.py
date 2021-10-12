@@ -34,12 +34,18 @@ def validate_topic_chosen(topics):
     """
     print('\n')
     topic_requested = input('Please select the number of the topic would you like to be quizzed: ')
+    print('\n')
     while topic_requested.isnumeric() is False or int(topic_requested) > len(topics) or int(topic_requested) == 0: # validation based on keys and using .lower() to make sure case isn't a cause of user input being rejected
         print('Please only choose from one of the below listed categories\n')
-        for count, topic in enumerate(topics):
-            print(count+1, topic)
+        # for count, topic in enumerate(topics):
+        #     print(count+1, topic)
+        count = 1
+        for topic, topic_count in topics.items():
+            print(f'{count}: {topic} ({topic_count} questions)')
+            count = count + 1
         print('\n')
         topic_requested = input('Try again and please select from the topics by number: ')
+        print('\n')
     topic_requested = int(topic_requested)-1
     return topic_requested
 

@@ -32,10 +32,13 @@ class View:
 
     def choose_topic(self, topics):
 
-        for count, topic in enumerate(topics):
-            print(count+1, topic)
+        count = 1
+        for topic, topic_count in topics.items():
+            print(f'{count}: {topic} ({topic_count} questions)')
+            count = count + 1
         topic_requested_num = validate_topic_chosen(topics)
-        topic_requested = topics[topic_requested_num].upper()
+        topics_list = list(topics)
+        topic_requested = topics_list[topic_requested_num].upper()
         print(f'You selected {topic_requested.upper()}')
         return topic_requested
     
