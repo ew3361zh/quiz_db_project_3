@@ -54,7 +54,7 @@ class View:
         function to query view model to query db to get questions for user-chosen topic
         """
         try:
-            questions = self.view_model.get_questions(topic) # TODO use question object to return questions, not weird lists and dictionaries
+            questions = self.view_model.get_questions(topic) 
             return questions
         except QuizError as e:
             print(str(e))
@@ -79,9 +79,9 @@ class View:
         function to ask one question for a particular topic which will return a QuizResult object
         """
         header(f'Question #{question_counter+1} in the {question.topic} category\nDifficulty of {question.difficulty} with {question.points} points available:')
+        time_started = get_time()
         print(question.question_text)             
         answers = show_randomized_answers(question)
-        time_started = get_time()
         print('\n')
         user_answer = get_user_answer()
         time_completed = get_time()

@@ -55,6 +55,8 @@ class QuizQuestionDB():
             for topic in results:
                 topics_counter.append(topic)
             topics_counter = [i[0] for i in topics_counter]
+            # code to get count of topics:
+            # https://stackoverflow.com/questions/18343472/efficient-way-to-count-the-element-in-a-dictionary-in-python-using-a-loop
             topics = {k:topics_counter.count(k) for k in set(topics_counter)}
         conn.close()
         return topics

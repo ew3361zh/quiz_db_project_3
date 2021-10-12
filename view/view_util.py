@@ -58,9 +58,10 @@ def generate_user_id():
 
 def get_time():
     """
-    function gets current time and turns it into a timestamp for tracking how much time user spent on question
+    function prints current time (start of quiz time) and returns it as a timestamp for tracking how much time user spent on question
     """
     current_time = datetime.now().timestamp()
+    header(f'Quiz is starting at {datetime.fromtimestamp(round(current_time))}')
     return current_time
 
 def show_randomized_answers(question):
