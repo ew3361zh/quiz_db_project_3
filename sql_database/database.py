@@ -121,7 +121,7 @@ class QuizQuestionDB():
             points_earned_count = points_earned_query.fetchone()[0]
 
             # calculation of % points to 1 decimal place
-            percent_correct = round(points_earned_count/points_available_count * 100, 1)
+            percent_correct = round(points_earned_count/points_available_count * 100, 2)
 
 
         summary_result = QuizResultSummary(questions_asked_count,
