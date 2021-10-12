@@ -13,6 +13,9 @@ class View:
 
 
     def start_quiz(self):
+        """
+        overall flow of view once main has initiated the quiz
+        """
         user_id = generate_user_id()
         topics = self.get_topics()
         topic_requested = self.choose_topic(topics)
@@ -21,7 +24,9 @@ class View:
         self.show_results(user_id)
 
     def get_topics(self):
-
+        """
+        function to query view model to query db to get available topics
+        """
         header('Welcome to our quiz program!\nYou can choose to answer questions from the following categories:')
 
         try:           
@@ -31,7 +36,9 @@ class View:
             print(str(e))
 
     def choose_topic(self, topics):
-
+        """
+        function to get user to select topic from available topics and return that topic for use in rest of the program
+        """
         count = 1
         for topic, topic_count in topics.items():
             print(f'{count}: {topic} ({topic_count} questions)')
@@ -43,7 +50,9 @@ class View:
         return topic_requested
     
     def get_questions(self, topic):
-        
+        """
+        function to query view model to query db to get questions for user-chosen topic
+        """
         try:
             questions = self.view_model.get_questions(topic) # TODO use question object to return questions, not weird lists and dictionaries
             return questions
@@ -52,7 +61,9 @@ class View:
 
 
     def ask_questions(self, questions, user_id):
-
+        """
+        function to ask all the questions for a particular topic
+        """
         question_counter = 0
         for question in questions:
             result = self.ask_one_question(question, user_id, question_counter)
@@ -64,7 +75,9 @@ class View:
 
 
     def ask_one_question(self, question, user_id, question_counter):
-            
+        """
+        function to ask one question for a particular topic which will return a QuizResult object
+        """
         header(f'Question #{question_counter+1} in the {question.topic} category\nDifficulty of {question.difficulty} with {question.points} points available:')
         print(question.question_text)             
         answers = show_randomized_answers(question)
@@ -90,7 +103,9 @@ class View:
         return result
 
     def show_results(self, user_id):
-        
+        """
+        function to show user results from their quiz
+        """
         try:
             summary_result = self.view_model.show_results(user_id)
             header('Here are your quiz results!')

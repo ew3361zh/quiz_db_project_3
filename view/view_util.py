@@ -80,7 +80,7 @@ def get_user_answer():
     user_answer = input('What is your answer? ')
     while user_answer.isnumeric() is False or int(user_answer) not in range(1,5):
         print('\n')
-        user_answer = input('Please try again and select the number answer you believe is correct')
+        user_answer = input('Please try again and select the number answer you believe is correct: ')
     user_answer = int(user_answer)-1
     print('\n')
     return user_answer

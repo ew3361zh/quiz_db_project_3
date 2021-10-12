@@ -46,28 +46,23 @@ class QuizQuestionDB():
         conn.close()
 
     def get_topics(self):
-        # conn = sqlite3.connect(db)
+        """
+        function to retrieve list of topics in db and count of number of questions for each topic
+        """
         with sqlite3.connect(db) as conn:
             results = conn.execute('SELECT topic FROM quiz_questions')
-            topics1 = []
-            
+            topics_counter = []
             for topic in results:
-                # if topic in topics:
-                #     pass
-                # else:
-                    topics1.append(topic)
-            topics1 = [i[0] for i in topics1]
-            topics = {k:topics1.count(k) for k in set(topics1)}
-            # print(topics)
-            # topics = [i[0] for i in topics]
-            
+                topics_counter.append(topic)
+            topics_counter = [i[0] for i in topics_counter]
+            topics = {k:topics_counter.count(k) for k in set(topics_counter)}
         conn.close()
-        # how to get normal string output from tuple sql query (i.e. turn ('x',) into x):
-        # https://stackoverflow.com/questions/47716237/python-list-how-to-remove-parenthesis-quotes-and-commas-in-my-list
-        # topics = [i[0] for i in topics]
         return topics
     
     def get_questions(self, topic):
+        """
+        function to retrieve questions for particular topic chosen by user
+        """
         if topic is None:
             raise QuizError('You must select a topic')
         else:
@@ -79,7 +74,9 @@ class QuizQuestionDB():
         
     
     def add_result(self, result):
-        
+        """
+        function to add single question result to results table
+        """
         if result.answer_picked is None:
             raise QuizError('Question must be answered')
             
@@ -99,7 +96,9 @@ class QuizQuestionDB():
         
     
     def show_results(self, user_id):
-        
+        """
+        function to query summed results from users quiz round
+        """
         with sqlite3.connect(db) as conn:
 
             # count of how many questions user was asked
