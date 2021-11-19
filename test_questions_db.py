@@ -21,11 +21,17 @@ class TestQuizDB(TestCase):
         # adding questions isn't part of the program by design
         # but I believe we still need this method to designate the test table?
 
+
+        # your tests can populate the questions table with example questions 
+
         with sqlite3.connect(self.test_db_url) as conn:
             # not dropping quiz_questions table because data insert not being executed in this program
             conn.execute('DROP TABLE IF EXISTS quiz_results')
         conn.close()
 
+
+        # you can also call the method in your code to create the database, then you know it has the same structure 
+        # that your code uses. Avoid problems if you need to modify the DB and forget to change this SQL
         with sqlite3.connect(self.test_db_url) as conn:
             conn.execute("""CREATE TABLE IF NOT EXISTS quiz_questions (
                 id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, 
@@ -56,6 +62,19 @@ class TestQuizDB(TestCase):
         self.db = database.QuizQuestionDB()
 
     def test_get_topics(self):
+
+        # This is the same logic as your code.  We want to avoid complex logic in tests. Otherwise we'll have to test the tests.  
+
+        # insert test topics into DB, for example 'trees' and 'cats' and 'space' or whatever 
+
+        # call the get_topics method in database.py, save return value - the test needs to interact with real methods or DB in your code 
+
+        # assert the method returns the example topics 
+
+        # self.assertEqual(['trees', 'cats', 'space'], topics)
+
+
+
         # try getting topics as expected
         with sqlite3.connect(self.test_db_url) as conn:
             results = conn.execute('SELECT topic FROM quiz_questions')
@@ -67,9 +86,14 @@ class TestQuizDB(TestCase):
                     topics.append(topic)
         conn.close()
         topics = [i[0] for i in topics]
-        self.assertEqual(['space', 'art', 'geoint'], topics)
+        self.assertEqual(['space', 'art', 'geoint'], topics)   # this is going to fail if you add more topics 
+
     
     def test_get_questions_for_topic_doesnt_exist(self):
+
+        # these tests are not calling any functions methods in your code. They are interacting with the test db 
+        # that's set up in this file  - so will they tell you anything about how the program code works? 
+
         # try to get questions if user selects topic not in list (and this somehow gets by)
         topic = 'language' # not an available topic
         with sqlite3.connect(self.test_db_url) as conn:
