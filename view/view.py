@@ -39,13 +39,13 @@ class View:
         """
         function to get user to select topic from available topics and return that topic for use in rest of the program
         """
-        count = 1
+        count = 1  # explain what this is for 
         for topic, topic_count in topics.items():
             print(f'{count}: {topic} ({topic_count} questions)')
             count = count + 1
         topic_requested_num = validate_topic_chosen(topics)
         topics_list = list(topics)
-        topic_requested = topics_list[topic_requested_num].upper()
+        topic_requested = topics_list[topic_requested_num].upper()  # what's happening here? 
         print(f'You selected {topic_requested.upper()}')
         return topic_requested
     
